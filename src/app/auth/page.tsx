@@ -65,53 +65,71 @@ export default function AuthPage(): React.JSX.Element {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-            <Card className="w-full max-w-md">
-                <CardHeader className="space-y-1 text-center">
-                    <CardTitle className="text-2xl font-bold">
+        <div className="min-h-screen flex items-center justify-center bg-background p-4 relative overflow-hidden">
+            {/* Subtle background gradient accent */}
+            <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-emerald-500/5 pointer-events-none" />
+
+            <div className="w-full max-w-sm relative">
+                {/* Header */}
+                <div className="text-center mb-8">
+                    <h1 className="text-4xl font-semibold tracking-tight mb-3">
                         WYX Intel
-                    </CardTitle>
-                    <CardDescription>
+                    </h1>
+                    <p className="text-muted-foreground text-sm">
                         Enter your API key to continue
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form
-                        onSubmit={(e): void => {
-                            void handleSubmit(e);
-                        }}
-                        className="space-y-4"
-                    >
-                        <div className="space-y-2">
-                            <Input
-                                type="password"
-                                placeholder="API Key"
-                                value={apiKey}
-                                onChange={(e): void =>
-                                    setApiKey(e.target.value)
-                                }
-                                disabled={isLoading}
-                                className="font-mono"
-                                autoFocus
-                            />
-                        </div>
+                    </p>
+                </div>
 
-                        {error && (
-                            <Alert variant="destructive">
-                                <AlertDescription>{error}</AlertDescription>
-                            </Alert>
-                        )}
-
-                        <Button
-                            type="submit"
-                            className="w-full"
+                {/* Form */}
+                <form
+                    onSubmit={(e): void => {
+                        void handleSubmit(e);
+                    }}
+                    className="space-y-4"
+                >
+                    <div className="relative group">
+                        <Input
+                            type="text"
+                            placeholder="API Key"
+                            value={apiKey}
+                            onChange={(e): void =>
+                                setApiKey(e.target.value)
+                            }
                             disabled={isLoading}
-                        >
+                            className="font-mono h-14 px-4 bg-background border-2 border-border/40 hover:border-border/60 focus:border-green-500/60 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all duration-200 tracking-widest shadow-sm hover:shadow-md focus:shadow-lg focus:shadow-green-500/10"
+                            style={{ WebkitTextSecurity: 'disc' } as React.CSSProperties}
+                            autoFocus
+                            autoComplete="off"
+                            data-1p-ignore
+                            data-lpignore="true"
+                            data-form-type="other"
+                        />
+                        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-green-500/0 via-green-500/5 to-green-500/0 opacity-0 group-focus-within:opacity-100 blur-xl transition-opacity duration-500" />
+                    </div>
+
+                    {error && (
+                        <Alert variant="destructive" className="border-red-500/30 bg-red-500/5">
+                            <AlertDescription className="text-sm">{error}</AlertDescription>
+                        </Alert>
+                    )}
+
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full h-14 bg-foreground text-background font-medium rounded-md hover:bg-foreground/90 active:bg-foreground/80 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md relative overflow-hidden group"
+                    >
+                        <span className="relative z-10">
                             {isLoading ? 'Verifying...' : 'Continue'}
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
+                        </span>
+                        <div className="absolute inset-0 bg-gradient-to-r from-green-500/0 via-green-500/20 to-green-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </button>
+                </form>
+
+                {/* Footer hint */}
+                <p className="text-center text-xs text-muted-foreground mt-6">
+                    Secure authentication • API key stored locally
+                </p>
+            </div>
         </div>
     );
 }

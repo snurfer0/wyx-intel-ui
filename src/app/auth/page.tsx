@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { useAuthStore } from '@/stores/auth.store';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.wyx.tools';
 
 export default function AuthPage(): React.JSX.Element {
     const [apiKey, setApiKey] = useState('');

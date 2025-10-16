@@ -1,7 +1,7 @@
 'use client';
 
-import React from 'react';
 import { Brain } from 'lucide-react';
+import React from 'react';
 import { EntityInfo } from '@/components/atoms/entity-info';
 import { EntityTypeBadge } from '@/components/atoms/entity-type-badge';
 import { PriorityBadge } from '@/components/atoms/priority-badge';
@@ -113,21 +113,30 @@ export function TrackingDetailTemplate({
                         {trackingResponse.tracking.title}
                     </h1>
                     <div className="flex flex-wrap items-center gap-x-2 text-xs font-mono text-gray-500">
-                        <span>Created {formatDate(trackingResponse.tracking.createdAt)}</span>
+                        <span>
+                            Created{' '}
+                            {formatDate(trackingResponse.tracking.createdAt)}
+                        </span>
                         <span>•</span>
                         <span>{trackingResponse.tracking.entityType}</span>
                         <span>•</span>
-                        <span className={
-                            trackingResponse.tracking.priority === 'high' ? 'text-red-400' :
-                            trackingResponse.tracking.priority === 'medium' ? 'text-yellow-400' :
-                            'text-blue-400'
-                        }>
-                            {trackingResponse.tracking.priority}
+                        <span
+                            className={
+                                trackingResponse.tracking.priority >= 8
+                                    ? 'text-red-400'
+                                    : trackingResponse.tracking.priority >= 5
+                                      ? 'text-yellow-400'
+                                      : 'text-blue-400'
+                            }
+                        >
+                            Priority: {trackingResponse.tracking.priority}
                         </span>
                         {trackingResponse.tracking.entityId && (
                             <>
                                 <span>•</span>
-                                <span className="text-emerald-400">{trackingResponse.tracking.entityId}</span>
+                                <span className="text-emerald-400">
+                                    {trackingResponse.tracking.entityId}
+                                </span>
                             </>
                         )}
                     </div>

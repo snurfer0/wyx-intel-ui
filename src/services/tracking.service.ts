@@ -1,12 +1,11 @@
 import axios from 'axios';
+import { API_URL } from '@/config/constants';
 import {
     PaginatedResponse,
     TrackingSearchItem,
     TrackingSearchParams,
     TrackingDetailed,
 } from '@/types';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 class TrackingService {
     private getHeaders(apiKey?: string): Record<string, string> {

@@ -1,9 +1,8 @@
+import { API_URL } from '@/config/constants';
 import {
     analyticsStatsSchema,
     type AnalyticsStats,
 } from '@/types/analytics.types';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 class AnalyticsService {
     private getApiKey(): string {

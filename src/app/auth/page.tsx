@@ -3,18 +3,9 @@
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { API_URL } from '@/config/constants';
 import { useAuthStore } from '@/stores/auth.store';
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.wyx.tools';
 
 export default function AuthPage(): React.JSX.Element {
     const [apiKey, setApiKey] = useState('');
@@ -92,12 +83,14 @@ export default function AuthPage(): React.JSX.Element {
                             type="text"
                             placeholder="API Key"
                             value={apiKey}
-                            onChange={(e): void =>
-                                setApiKey(e.target.value)
-                            }
+                            onChange={(e): void => setApiKey(e.target.value)}
                             disabled={isLoading}
                             className="font-mono h-14 px-4 bg-background border-2 border-border/40 hover:border-border/60 focus:border-green-500/60 focus-visible:ring-0 focus-visible:ring-offset-0 transition-all duration-200 tracking-widest shadow-sm hover:shadow-md focus:shadow-lg focus:shadow-green-500/10"
-                            style={{ WebkitTextSecurity: 'disc' } as React.CSSProperties}
+                            style={
+                                {
+                                    WebkitTextSecurity: 'disc',
+                                } as React.CSSProperties
+                            }
                             autoFocus
                             autoComplete="off"
                             data-1p-ignore
@@ -108,8 +101,13 @@ export default function AuthPage(): React.JSX.Element {
                     </div>
 
                     {error && (
-                        <Alert variant="destructive" className="border-red-500/30 bg-red-500/5">
-                            <AlertDescription className="text-sm">{error}</AlertDescription>
+                        <Alert
+                            variant="destructive"
+                            className="border-red-500/30 bg-red-500/5"
+                        >
+                            <AlertDescription className="text-sm">
+                                {error}
+                            </AlertDescription>
                         </Alert>
                     )}
 

@@ -1,0 +1,71 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Comment Guidelines
+
+## Overview
+AI assistants should avoid generating unnecessary comments and should only add comments when they provide genuine value that isn't immediately obvious from the code itself.
+
+## Comment Rules
+
+### When NOT to Add Comments
+- **Self-explanatory code**: Do not explain code that is clear from reading the variable names, function names, and structure
+- **Obvious operations**: Avoid comments like `// set loading state` or `// render component`
+- **Standard React patterns**: Don't explain common patterns like hooks, event handlers, or component props
+- **Type definitions**: Avoid commenting on TypeScript types when the type name is descriptive
+- **Simple JSX**: Don't comment on straightforward JSX elements or styling
+- **Standard Next.js features**: Avoid explaining standard routing, API routes, or data fetching patterns
+
+### When TO Add Comments
+- **Complex business logic**: Explain WHY something is done, not WHAT is being done
+- **Non-obvious state management**: Clarify complex state interactions or side effects
+- **Performance optimizations**: Document memoization, virtualization, or other performance considerations
+- **External integrations**: Document API quirks, third-party service limitations, or integration specifics
+- **Accessibility considerations**: Explain screen reader support or keyboard navigation
+- **Browser compatibility**: Document workarounds for specific browser issues
+- **Configuration context**: Explain environment-specific settings or feature flags
+- **Complex styling logic**: Explain dynamic styling calculations or responsive behavior
+
+### Comment Quality Standards
+- Comments should explain **WHY**, not **WHAT**
+- Comments should provide context that isn't obvious from the code
+- Keep comments concise and focused
+- Update comments when code changes
+- Remove outdated or incorrect comments
+
+### Examples
+
+#### ❌ Unnecessary Comments
+```typescript
+// Set loading to true
+setLoading(true);
+
+// Render the button component
+<Button onClick={handleClick}>Submit</Button>
+
+// Get data from API
+const data = await fetchData();
+```
+
+#### ✅ Valuable Comments
+```typescript
+// Debounce search to avoid hitting rate limits on external API
+const debouncedSearch = useDebouncedCallback(searchTerm, 300);
+
+// Use portal to render modal outside of current DOM tree to avoid z-index issues
+return createPortal(<Modal>{children}</Modal>, document.body);
+
+// Business rule: Free users can only have 3 active agents
+if (!user.isPremium && agents.length >= 3) {
+    showUpgradeModal();
+}
+```
+
+## Implementation
+- Focus on writing clear, self-documenting code first
+- Use descriptive variable and function names
+- Structure components logically to reduce need for comments
+- Use meaningful prop names and component names
+- Only add comments when they genuinely improve understanding

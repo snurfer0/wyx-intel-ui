@@ -1,0 +1,60 @@
+name: ESLint CI
+
+on:
+    pull_request:
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
+jobs:
+    lint-format:
+        permissions:
+            contents: read
+            pull-requests: write
+            checks: write
+
+        runs-on: ubuntu-latest
+        timeout-minutes: 10
+        env:
+            HUSKY: 0
+        steps:
+            - name: Checkout Code Repository
+              uses: actions/checkout@v4
+
+            - name: Setup PNPM
+              uses: pnpm/action-setup@v4
+              with:
+                  version: latest
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22.15.0
+                  cache: 'pnpm'
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Get changed files
+              id: changed-files
+              run: |
+                  if [ "${{ github.event_name }}" = "pull_request" ]; then
+                    echo "files=$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep -E '\.(js|jsx|ts|tsx)$' | grep -E '^(src/|libs/)' | tr '\n' ' ')" >> $GITHUB_OUTPUT
+                    echo "any_changed=$(git diff --name-only --diff-filter=ACMRT ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep -E '\.(js|jsx|ts|tsx)$' | grep -E '^(src/|libs/)' | wc -l | xargs test 0 -lt && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+                  else
+                    echo "files=" >> $GITHUB_OUTPUT
+                    echo "any_changed=false" >> $GITHUB_OUTPUT
+                  fi
+
+            - name: Run ESLint
+              if: steps.changed-files.outputs.any_changed == 'true'
+              run: pnpm eslint ${{ steps.changed-files.outputs.files }} --format json --output-file eslint_report.json
+              continue-on-error: true
+
+            - name: Annotate ESLint results
+              if: steps.changed-files.outputs.any_changed == 'true'
+              uses: ataylorme/eslint-annotate-action@v3
+              with:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  report-json: 'eslint_report.json'

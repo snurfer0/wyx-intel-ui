@@ -1,0 +1,126 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# ESLint & Code Style Rules
+
+## Overview
+When writing code for this project, **ALWAYS** follow the ESLint rules and Prettier formatting defined in the configuration files.
+
+## Configuration Files
+- **ESLint**: `eslint.config.mjs`
+- **Prettier**: `.prettierrc.js`
+
+## Key ESLint Rules to Follow
+
+### TypeScript Strict Rules
+- Use strict TypeScript typing (enabled via `strictTypeChecked`)
+- Explicit function return types required: `@typescript-eslint/explicit-function-return-type`
+- No unused variables (use `_` prefix for intentionally unused)
+- Handle promises properly (no floating promises)
+
+### Code Style Rules
+- **Indentation**: 4 spaces (no tabs)
+- **Line length**: 80 characters max
+- **Quotes**: Single quotes preferred
+- **Arrow functions**: No parentheses around single params (`avoid`)
+- **Semicolons**: Required
+- **Trailing commas**: Where valid
+
+### React/JSX Rules
+- Use `.tsx` extension for JSX files
+- Self-closing components when no children
+- No unnecessary curly braces in JSX
+- Destructuring assignment preferred
+- No React import needed (React 17+ JSX transform)
+
+### Import Rules
+- Alphabetical import ordering
+- Group imports: builtin → external → internal → parent → sibling → index
+- No newlines between import groups
+- Use `@/` for internal imports
+
+### Promise Handling
+- Always handle promises with `await`, `.catch()`, or `void` operator
+- No misused promises in conditionals
+- Use `ignoreVoid: true` for intentional fire-and-forget
+
+### Function Declarations
+- Explicit return types required for all functions
+- Use arrow functions for simple expressions
+- Use function declarations for hoisted functions
+
+## Prettier Formatting
+- **Tab Width**: 4 spaces
+- **Print Width**: 80 characters
+- **End of Line**: Auto
+- **Arrow Parens**: Avoid (single param)
+- **Single Quote**: true
+- **Bracket Spacing**: true
+
+## Examples
+
+### ✅ Correct Function Declaration
+```typescript
+const fetchAgent = async (id: string): Promise<Agent> => {
+    return await apiClient.get(`/agents/${id}`);
+};
+```
+
+### ✅ Correct Promise Handling
+```typescript
+// With void for fire-and-forget
+void queryClient.invalidateQueries({ queryKey: ['agents'] });
+
+// With await
+await queryClient.invalidateQueries({ queryKey: ['agents'] });
+
+// With catch
+queryClient.invalidateQueries({ queryKey: ['agents'] }).catch(console.error);
+```
+
+### ✅ Correct Import Order
+```typescript
+import { useEffect, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Agent } from '@/types';
+import { useAgents } from '@/hooks/use.agents';
+```
+
+### ✅ Correct JSX
+```typescript
+// Self-closing
+<Button disabled={isLoading} />
+
+// No unnecessary braces
+<span className="text-sm">Hello</span>
+
+// Destructuring
+const { name, id } = agent;
+```
+
+## Critical Rules
+1. **Always** add explicit return types to functions
+2. **Always** handle promises properly
+3. **Always** use 4-space indentation
+4. **Always** keep lines under 80 characters
+5. **Always** use single quotes
+6. **Always** use destructuring when possible
+7. **Always** use arrow functions without parens for single params
+
+## When Writing Code
+Before suggesting any code:
+1. Check function return types
+2. Verify promise handling
+3. Ensure proper formatting (4 spaces, 80 chars, single quotes)
+4. Use destructuring assignment
+5. Follow import ordering rules
+6. Use self-closing JSX tags where appropriate
+
+## Error Prevention
+- Run mental linting check before suggesting code
+- Prefer explicit types over `any`
+- Use `void` operator for intentional fire-and-forget promises
+- Add `_` prefix to intentionally unused variables
+- Keep JSX props on same line if under 80 characters

@@ -1,0 +1,63 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+# Tools Usage Guide
+
+**Check available tools and use based on task complexity.**
+
+## Tools
+
+**🧠 Sequential Thinking**
+- Complex problems, multi-step planning
+- When you need to think through approaches
+
+**📚 Context7**
+- Documentation, examples, library info
+- API docs, framework guides
+
+**💻 Desktop Commander**
+- Run commands, create files, execute scripts
+- Development setup, testing
+
+**🔍 Web Search**
+- Current info, recent updates, real-time data
+- Latest releases, trends
+
+## Decision Tree
+
+```
+Simple question → Answer directly
+Need docs/examples → Context7
+Need to run something → Desktop Commander
+Need current info → Web Search
+Complex analysis → Sequential Thinking first
+```
+## Common Patterns
+
+**Setup Project**
+1. Sequential Thinking (plan)
+2. Context7 (docs)
+3. Desktop Commander (execute)
+
+**Debug Issue**
+1. Sequential Thinking (analyze)
+2. Context7 (troubleshooting)
+3. Desktop Commander (test)
+
+**Research Topic**
+1. Context7 (technical docs)
+2. Web Search (current trends)
+3. Sequential Thinking (synthesize)
+
+**Quick Implementation**
+1. Context7 (examples)
+2. Desktop Commander (code)
+
+## Rules
+
+- Don't overthink simple tasks
+- Use Context7 before Web Search for tech docs
+- Combine tools for complex tasks
+- Start specific, expand if needed

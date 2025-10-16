@@ -1,44 +1,17 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { Badge } from '@/components/ui/badge';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
+import React from 'react';
+import { StatCard } from '@/components/atoms/stat-card';
+import { ActivityCard } from '@/components/molecules/activity-card';
+import { TopAuthorsList } from '@/components/organisms/top-authors-list';
+import { TopChainsList } from '@/components/organisms/top-chains-list';
+import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { analyticsService } from '@/services/analytics.service';
-import type { AnalyticsStats } from '@/types/analytics.types';
+import { useAnalyticsStats } from '@/hooks/use-analytics-stats';
 import { formatLargeNumber } from '@/utils/number-formatting';
 
 export default function StatisticsPage(): React.JSX.Element {
-    const [stats, setStats] = useState<AnalyticsStats | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
-    useEffect((): (() => void) => {
-        const fetchStats = async (): Promise<void> => {
-            try {
-                const data = await analyticsService.getStats();
-                setStats(data);
-                setError(null);
-            } catch (err) {
-                console.error('Error fetching stats:', err);
-                setError('Failed to load statistics');
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        void fetchStats();
-        const interval = setInterval(() => {
-            void fetchStats();
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
+    const { stats, isLoading, error } = useAnalyticsStats();
 
     if (isLoading) {
         return (
@@ -89,278 +62,107 @@ export default function StatisticsPage(): React.JSX.Element {
 
             {/* Overview Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card>
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">
-                            Total Posts
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-3xl font-bold">
-                            {formatLargeNumber(stats.overview.totalPosts)}
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            +{formatLargeNumber(stats.overview.postsLast24h)}{' '}
-                            last 24h
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">
-                            Total Tokens
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-3xl font-bold">
-                            {formatLargeNumber(stats.overview.totalTokens)}
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            {stats.tokens.withProfiles} with profiles
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">
-                            Total Authors
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-3xl font-bold">
-                            {formatLargeNumber(stats.overview.totalAuthors)}
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            {formatLargeNumber(
-                                stats.authors.timeBasedStats.last24h,
-                            )}{' '}
-                            last 24h
-                        </p>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-sm font-medium text-muted-foreground">
-                            Tracking Items
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-3xl font-bold">
-                            {stats.overview.totalTracking}
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                            Avg priority:{' '}
-                            {stats.tracking.avgPriority.toFixed(1)}
-                        </p>
-                    </CardContent>
-                </Card>
+                <StatCard
+                    title="Total Posts"
+                    value={formatLargeNumber(stats.overview.totalPosts)}
+                    subtitle={`+${formatLargeNumber(stats.overview.postsLast24h)} last 24h`}
+                />
+                <StatCard
+                    title="Total Tokens"
+                    value={formatLargeNumber(stats.overview.totalTokens)}
+                    subtitle={`${stats.tokens.withProfiles} with profiles`}
+                />
+                <StatCard
+                    title="Total Authors"
+                    value={formatLargeNumber(stats.overview.totalAuthors)}
+                    subtitle={`${formatLargeNumber(stats.authors.timeBasedStats.last24h)} last 24h`}
+                />
+                <StatCard
+                    title="Tracking Items"
+                    value={stats.overview.totalTracking}
+                    subtitle={`Avg priority: ${stats.tracking.avgPriority.toFixed(1)}`}
+                />
             </div>
 
             {/* Activity Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-base">
-                            Recent Activity (1h)
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">
-                                Posts
-                            </span>
-                            <span className="font-semibold">
-                                {stats.posts.timeBasedStats.last1h}
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">
-                                Tokens
-                            </span>
-                            <span className="font-semibold">
-                                {formatLargeNumber(
-                                    stats.tokens.timeBasedStats.last1h,
-                                )}
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">
-                                Authors
-                            </span>
-                            <span className="font-semibold">
-                                {stats.authors.timeBasedStats.last1h}
-                            </span>
-                        </div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-base">
-                            24 Hour Activity
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">
-                                Posts
-                            </span>
-                            <span className="font-semibold">
-                                {formatLargeNumber(
-                                    stats.posts.timeBasedStats.last24h,
-                                )}
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">
-                                Tokens
-                            </span>
-                            <span className="font-semibold">
-                                {formatLargeNumber(
-                                    stats.tokens.timeBasedStats.last24h,
-                                )}
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">
-                                Authors
-                            </span>
-                            <span className="font-semibold">
-                                {formatLargeNumber(
-                                    stats.authors.timeBasedStats.last24h,
-                                )}
-                            </span>
-                        </div>
-                    </CardContent>
-                </Card>
-                <Card>
-                    <CardHeader>
-                        <CardTitle className="text-base">
-                            7 Day Activity
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">
-                                Posts
-                            </span>
-                            <span className="font-semibold">
-                                {formatLargeNumber(
-                                    stats.posts.timeBasedStats.last7d,
-                                )}
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">
-                                Tokens
-                            </span>
-                            <span className="font-semibold">
-                                {formatLargeNumber(
-                                    stats.tokens.timeBasedStats.last7d,
-                                )}
-                            </span>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <span className="text-sm text-muted-foreground">
-                                Avg/day
-                            </span>
-                            <span className="font-semibold">
-                                {formatLargeNumber(stats.posts.avgPerDay)}
-                            </span>
-                        </div>
-                    </CardContent>
-                </Card>
+                <ActivityCard
+                    title="Recent Activity (1h)"
+                    items={[
+                        {
+                            label: 'Posts',
+                            value: stats.posts.timeBasedStats.last1h,
+                        },
+                        {
+                            label: 'Tokens',
+                            value: formatLargeNumber(
+                                stats.tokens.timeBasedStats.last1h,
+                            ),
+                        },
+                        {
+                            label: 'Authors',
+                            value: stats.authors.timeBasedStats.last1h,
+                        },
+                    ]}
+                />
+                <ActivityCard
+                    title="24 Hour Activity"
+                    items={[
+                        {
+                            label: 'Posts',
+                            value: formatLargeNumber(
+                                stats.posts.timeBasedStats.last24h,
+                            ),
+                        },
+                        {
+                            label: 'Tokens',
+                            value: formatLargeNumber(
+                                stats.tokens.timeBasedStats.last24h,
+                            ),
+                        },
+                        {
+                            label: 'Authors',
+                            value: formatLargeNumber(
+                                stats.authors.timeBasedStats.last24h,
+                            ),
+                        },
+                    ]}
+                />
+                <ActivityCard
+                    title="7 Day Activity"
+                    items={[
+                        {
+                            label: 'Posts',
+                            value: formatLargeNumber(
+                                stats.posts.timeBasedStats.last7d,
+                            ),
+                        },
+                        {
+                            label: 'Tokens',
+                            value: formatLargeNumber(
+                                stats.tokens.timeBasedStats.last7d,
+                            ),
+                        },
+                        {
+                            label: 'Avg/day',
+                            value: formatLargeNumber(stats.posts.avgPerDay),
+                        },
+                    ]}
+                />
             </div>
 
             {/* Top Authors and Chains */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Top Authors by Posts</CardTitle>
-                        <CardDescription>
-                            Most active content creators
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-3">
-                            {stats.authors.topByPosts
-                                .slice(0, 5)
-                                .map((author, idx) => (
-                                    <div
-                                        key={author.id}
-                                        className="flex items-center justify-between"
-                                    >
-                                        <div className="flex items-center gap-3 min-w-0 flex-1">
-                                            <span className="text-sm font-mono text-muted-foreground w-4">
-                                                {idx + 1}
-                                            </span>
-                                            <div className="min-w-0 flex-1">
-                                                <p className="text-sm font-medium truncate">
-                                                    @{author.username}
-                                                </p>
-                                                <p className="text-xs text-muted-foreground">
-                                                    {formatLargeNumber(
-                                                        author.followers,
-                                                    )}{' '}
-                                                    followers
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <Badge variant="secondary">
-                                            {author.postsCount} posts
-                                        </Badge>
-                                    </div>
-                                ))}
-                        </div>
-                    </CardContent>
-                </Card>
-
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Top Chains</CardTitle>
-                        <CardDescription>
-                            Token distribution by blockchain
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-3">
-                            {topChains.map(([chain, count], idx) => (
-                                <div
-                                    key={chain}
-                                    className="flex items-center justify-between"
-                                >
-                                    <div className="flex items-center gap-3">
-                                        <span className="text-sm font-mono text-muted-foreground w-4">
-                                            {idx + 1}
-                                        </span>
-                                        <span className="text-sm font-medium capitalize">
-                                            {chain}
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-sm text-muted-foreground">
-                                            {(
-                                                (count / stats.tokens.total) *
-                                                100
-                                            ).toFixed(1)}
-                                            %
-                                        </span>
-                                        <Badge variant="outline">
-                                            {formatLargeNumber(count)}
-                                        </Badge>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </CardContent>
-                </Card>
+                <TopAuthorsList authors={stats.authors.topByPosts} />
+                <TopChainsList
+                    chains={topChains}
+                    totalTokens={stats.tokens.total}
+                />
             </div>
 
             {/* System Info */}
             <Card>
-                <CardHeader>
-                    <CardTitle>System Information</CardTitle>
-                </CardHeader>
-                <CardContent>
+                <CardContent className="pt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div>
                             <p className="text-xs text-muted-foreground">

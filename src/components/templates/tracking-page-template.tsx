@@ -14,9 +14,7 @@ interface TrackingPageTemplateProps {
     isLoadingMore: boolean;
     error: string | null;
     searchQuery: string;
-    totalCount: number;
     hasMore: boolean;
-    onSearch: (query: string) => void;
     loadMoreRef: (node?: Element | null) => void;
 }
 
@@ -26,18 +24,12 @@ export function TrackingPageTemplate({
     isLoadingMore,
     error,
     searchQuery,
-    totalCount,
     hasMore,
-    onSearch,
     loadMoreRef,
 }: TrackingPageTemplateProps): React.JSX.Element {
     return (
         <div className="container mx-auto p-6">
-            <TrackingHeader
-                totalCount={totalCount}
-                isLoading={isLoading}
-                onSearch={onSearch}
-            />
+            <TrackingHeader />
 
             {error && (
                 <Alert

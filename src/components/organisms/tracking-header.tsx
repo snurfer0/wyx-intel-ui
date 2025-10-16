@@ -2,18 +2,11 @@
 
 import React from 'react';
 import { TrackingSearchBar } from '@/components/molecules/tracking-search-bar';
+import { useTrackingStore } from '@/stores/tracking.store';
 
-interface TrackingHeaderProps {
-    totalCount: number;
-    isLoading: boolean;
-    onSearch: (query: string) => void;
-}
+export function TrackingHeader(): React.JSX.Element {
+    const totalCount = useTrackingStore(state => state.totalCount);
 
-export function TrackingHeader({
-    totalCount,
-    isLoading,
-    onSearch,
-}: TrackingHeaderProps): React.JSX.Element {
     return (
         <div>
             <div className="mb-8 border-b border-emerald-500/20 pb-4">
@@ -27,10 +20,7 @@ export function TrackingHeader({
                             market narratives
                         </p>
                     </div>
-                    <TrackingSearchBar
-                        onSearch={onSearch}
-                        isLoading={isLoading}
-                    />
+                    <TrackingSearchBar />
                 </div>
             </div>
         </div>

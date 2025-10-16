@@ -28,18 +28,21 @@ export function TokenCard({ token }: TokenCardProps): React.JSX.Element {
     };
 
     return (
-        <Card className="hover:shadow-md transition-shadow">
+        <Card className="border-emerald-500/20 bg-black hover:border-emerald-500/40 transition-all duration-200">
             <CardContent className="pt-4 space-y-2">
                 <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                        <p className="font-medium text-sm truncate">
+                        <p className="font-mono font-medium text-sm text-emerald-400 truncate">
                             {token.name}
                         </p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs font-mono text-gray-500">
                             {token.symbol}
                         </p>
                     </div>
-                    <Badge variant="outline" className="text-xs shrink-0">
+                    <Badge
+                        variant="outline"
+                        className="text-xs font-mono shrink-0 border-emerald-500/30 text-emerald-400"
+                    >
                         {token.chain.toUpperCase()}
                     </Badge>
                 </div>
@@ -48,13 +51,15 @@ export function TokenCard({ token }: TokenCardProps): React.JSX.Element {
                         onClick={(): void => {
                             void handleCopyTokenId();
                         }}
-                        className="text-xs bg-muted px-2 py-1 rounded block cursor-pointer hover:bg-muted/80 transition-colors font-mono"
+                        className="text-xs font-mono bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 px-2 py-1 rounded block cursor-pointer hover:bg-emerald-500/10 transition-colors"
                         title="Click to copy full address"
                     >
                         {shortenAddress(token.id)}
                     </code>
                     {copied && (
-                        <p className="text-xs text-green-600 mt-1">Copied!</p>
+                        <p className="text-xs font-mono text-emerald-400 mt-1">
+                            Copied!
+                        </p>
                     )}
                 </div>
             </CardContent>

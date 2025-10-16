@@ -14,10 +14,10 @@ export function PostAuthorInfo({
     return (
         <div className="flex items-center gap-3">
             <div className="flex flex-col min-w-0 flex-1">
-                <span className="text-sm font-medium truncate">
+                <span className="text-sm font-mono font-medium text-emerald-400 truncate">
                     @{author.username}
                 </span>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <div className="flex items-center gap-2 text-xs font-mono text-gray-500">
                     <span>{author.platform}</span>
                     <span>•</span>
                     <span>{formatLargeNumber(author.followers)} followers</span>

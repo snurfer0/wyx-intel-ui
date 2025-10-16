@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 import React from 'react';
-import { EntityTypeBadge } from '@/components/atoms/entity-type-badge';
 import { PriorityBadge } from '@/components/atoms/priority-badge';
 import { RelativeTime } from '@/components/atoms/relative-time';
 import { Badge } from '@/components/ui/badge';

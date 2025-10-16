@@ -12,10 +12,8 @@ export default function TrackingPage(): React.JSX.Element {
         isLoadingMore,
         error,
         searchQuery,
-        totalCount,
         hasMore,
         fetchAllItems,
-        searchItems,
         loadMoreItems,
     } = useTracking();
 
@@ -41,11 +39,7 @@ export default function TrackingPage(): React.JSX.Element {
             isLoadingMore={isLoadingMore}
             error={error}
             searchQuery={searchQuery}
-            totalCount={totalCount}
             hasMore={hasMore}
-            onSearch={(query): void => {
-                void searchItems(query);
-            }}
             loadMoreRef={loadMoreRef}
         />
     );

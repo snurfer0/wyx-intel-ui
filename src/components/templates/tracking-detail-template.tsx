@@ -1,7 +1,10 @@
 'use client';
 
 import React from 'react';
+import { Brain } from 'lucide-react';
 import { EntityInfo } from '@/components/atoms/entity-info';
+import { EntityTypeBadge } from '@/components/atoms/entity-type-badge';
+import { PriorityBadge } from '@/components/atoms/priority-badge';
 import { ReasoningChain } from '@/components/atoms/reasoning-chain';
 import { PostCard } from '@/components/molecules/post-card';
 import { TokenCard } from '@/components/molecules/token-card';
@@ -30,11 +33,11 @@ export function TrackingDetailTemplate({
     if (isLoading) {
         return (
             <div className="container mx-auto p-6 max-w-7xl">
-                <Skeleton className="h-10 w-32 mb-6" />
+                <Skeleton className="h-10 w-32 mb-6 bg-emerald-500/10" />
                 <div className="space-y-6">
-                    <Skeleton className="h-64 w-full" />
-                    <Skeleton className="h-96 w-full" />
-                    <Skeleton className="h-64 w-full" />
+                    <Skeleton className="h-64 w-full bg-emerald-500/10" />
+                    <Skeleton className="h-96 w-full bg-emerald-500/10" />
+                    <Skeleton className="h-64 w-full bg-emerald-500/10" />
                 </div>
             </div>
         );
@@ -43,7 +46,11 @@ export function TrackingDetailTemplate({
     if (error || !trackingResponse) {
         return (
             <div className="container mx-auto p-6 max-w-7xl">
-                <Button variant="ghost" onClick={onBack} className="mb-6">
+                <Button
+                    variant="ghost"
+                    onClick={onBack}
+                    className="mb-6 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300 font-mono"
+                >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="16"
@@ -60,9 +67,14 @@ export function TrackingDetailTemplate({
                     </svg>
                     Back
                 </Button>
-                <Alert variant="destructive">
-                    <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>
+                <Alert
+                    variant="destructive"
+                    className="border-red-500/20 bg-red-500/5"
+                >
+                    <AlertTitle className="font-mono text-red-400">
+                        Error
+                    </AlertTitle>
+                    <AlertDescription className="font-mono text-gray-400">
                         {error || 'Tracking not found'}
                     </AlertDescription>
                 </Alert>
@@ -72,7 +84,11 @@ export function TrackingDetailTemplate({
 
     return (
         <div className="container mx-auto p-6 max-w-7xl">
-            <Button variant="ghost" onClick={onBack} className="mb-6">
+            <Button
+                variant="ghost"
+                onClick={onBack}
+                className="mb-8 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300 font-mono -ml-2"
+            >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
@@ -91,42 +107,36 @@ export function TrackingDetailTemplate({
             </Button>
 
             <div className="space-y-6">
-                <Card>
-                    <CardHeader>
-                        <div className="flex items-start justify-between gap-4">
-                            <div className="flex-1">
-                                <CardTitle className="text-2xl mb-4">
-                                    {trackingResponse.tracking.title}
-                                </CardTitle>
-                                <EntityInfo
-                                    entityType={
-                                        trackingResponse.tracking.entityType
-                                    }
-                                    priority={
-                                        trackingResponse.tracking.priority
-                                    }
-                                    entityId={
-                                        trackingResponse.tracking.entityId
-                                    }
-                                />
-                            </div>
-                            <div className="text-right">
-                                <p className="text-xs text-muted-foreground">
-                                    Created
-                                </p>
-                                <p className="text-sm">
-                                    {formatDate(
-                                        trackingResponse.tracking.createdAt,
-                                    )}
-                                </p>
-                            </div>
-                        </div>
-                    </CardHeader>
-                </Card>
+                {/* Header Section */}
+                <div className="border-l-2 border-emerald-500 pl-4">
+                    <h1 className="text-2xl font-mono font-semibold text-emerald-400 mb-1">
+                        {trackingResponse.tracking.title}
+                    </h1>
+                    <div className="flex flex-wrap items-center gap-x-2 text-xs font-mono text-gray-500">
+                        <span>Created {formatDate(trackingResponse.tracking.createdAt)}</span>
+                        <span>•</span>
+                        <span>{trackingResponse.tracking.entityType}</span>
+                        <span>•</span>
+                        <span className={
+                            trackingResponse.tracking.priority === 'high' ? 'text-red-400' :
+                            trackingResponse.tracking.priority === 'medium' ? 'text-yellow-400' :
+                            'text-blue-400'
+                        }>
+                            {trackingResponse.tracking.priority}
+                        </span>
+                        {trackingResponse.tracking.entityId && (
+                            <>
+                                <span>•</span>
+                                <span className="text-emerald-400">{trackingResponse.tracking.entityId}</span>
+                            </>
+                        )}
+                    </div>
+                </div>
 
-                <Card>
+                <Card className="border-emerald-500/20 bg-black">
                     <CardHeader>
-                        <CardTitle className="text-lg">
+                        <CardTitle className="text-lg font-mono text-emerald-400 flex items-center gap-2">
+                            <Brain className="w-4 h-4" />
                             Reasoning Chain
                         </CardTitle>
                     </CardHeader>
@@ -139,15 +149,9 @@ export function TrackingDetailTemplate({
 
                 {trackingResponse.tokens.length > 0 && (
                     <div>
-                        <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-xl font-semibold">Tokens</h2>
-                            <Badge variant="secondary">
-                                {trackingResponse.tokens.length} token
-                                {trackingResponse.tokens.length !== 1
-                                    ? 's'
-                                    : ''}
-                            </Badge>
-                        </div>
+                        <h2 className="text-xl font-mono font-semibold text-emerald-400 mb-4">
+                            Tokens ({trackingResponse.tokens.length})
+                        </h2>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
                             {trackingResponse.tokens.map(token => (
                                 <TokenCard key={token.id} token={token} />
@@ -158,13 +162,9 @@ export function TrackingDetailTemplate({
 
                 {trackingResponse.posts.length > 0 && (
                     <div>
-                        <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-xl font-semibold">Posts</h2>
-                            <Badge variant="secondary">
-                                {trackingResponse.posts.length} post
-                                {trackingResponse.posts.length !== 1 ? 's' : ''}
-                            </Badge>
-                        </div>
+                        <h2 className="text-xl font-mono font-semibold text-emerald-400 mb-4">
+                            Posts ({trackingResponse.posts.length})
+                        </h2>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                             {trackingResponse.posts.map(postWithAuthor => (
                                 <PostCard
@@ -178,9 +178,9 @@ export function TrackingDetailTemplate({
 
                 {trackingResponse.posts.length === 0 &&
                     trackingResponse.tokens.length === 0 && (
-                        <Card>
+                        <Card className="border-emerald-500/20 bg-black">
                             <CardContent className="py-12">
-                                <p className="text-center text-muted-foreground">
+                                <p className="text-center font-mono text-gray-500">
                                     No posts or tokens associated with this
                                     tracking item
                                 </p>

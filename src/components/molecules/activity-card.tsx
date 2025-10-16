@@ -18,20 +18,26 @@ export function ActivityCard({
     className,
 }: ActivityCardProps): React.JSX.Element {
     return (
-        <Card className={className}>
+        <Card
+            className={`border-emerald-500/20 bg-black hover:border-emerald-500/40 transition-colors ${className || ''}`}
+        >
             <CardHeader>
-                <CardTitle className="text-base">{title}</CardTitle>
+                <CardTitle className="text-base font-mono text-emerald-400">
+                    {title}
+                </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
                 {items.map((item, idx) => (
                     <div
                         key={idx}
-                        className="flex justify-between items-center"
+                        className="flex justify-between items-center border-b border-emerald-500/10 pb-2 last:border-0"
                     >
-                        <span className="text-sm text-muted-foreground">
+                        <span className="text-sm font-mono text-gray-400">
                             {item.label}
                         </span>
-                        <span className="font-semibold">{item.value}</span>
+                        <span className="font-mono font-semibold text-emerald-400">
+                            {item.value}
+                        </span>
                     </div>
                 ))}
             </CardContent>

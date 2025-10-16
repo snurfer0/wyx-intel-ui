@@ -40,9 +40,16 @@ export function TrackingPageTemplate({
             />
 
             {error && (
-                <Alert variant="destructive" className="mb-6">
-                    <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>{error}</AlertDescription>
+                <Alert
+                    variant="destructive"
+                    className="mb-6 border-red-500/20 bg-red-500/5"
+                >
+                    <AlertTitle className="font-mono text-red-400">
+                        Error
+                    </AlertTitle>
+                    <AlertDescription className="font-mono text-gray-400">
+                        {error}
+                    </AlertDescription>
                 </Alert>
             )}
 

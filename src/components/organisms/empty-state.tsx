@@ -11,10 +11,10 @@ export function EmptyState({
 }: EmptyStateProps): React.JSX.Element {
     return (
         <div className="text-center py-12">
-            <p className="text-muted-foreground">
+            <p className="font-mono text-gray-400">
                 {searchQuery
-                    ? 'No results found. Try a different search query.'
-                    : 'No tracking items found'}
+                    ? '> No results found. Try a different search query.'
+                    : '> No tracking items found'}
             </p>
         </div>
     );

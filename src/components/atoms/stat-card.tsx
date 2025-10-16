@@ -15,16 +15,20 @@ export function StatCard({
     className,
 }: StatCardProps): React.JSX.Element {
     return (
-        <Card className={className}>
+        <Card
+            className={`border-emerald-500/20 bg-black hover:border-emerald-500/40 transition-colors ${className || ''}`}
+        >
             <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+                <CardTitle className="text-sm font-mono font-medium text-gray-400 uppercase">
                     {title}
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="text-3xl font-bold">{value}</div>
+                <div className="text-3xl font-mono font-bold text-emerald-400">
+                    {value}
+                </div>
                 {subtitle && (
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs font-mono text-gray-500 mt-1">
                         {subtitle}
                     </p>
                 )}

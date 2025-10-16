@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { TrackingSearchBar } from '@/components/molecules/tracking-search-bar';
-import { Badge } from '@/components/ui/badge';
 
 interface TrackingHeaderProps {
     totalCount: number;
@@ -17,19 +16,22 @@ export function TrackingHeader({
 }: TrackingHeaderProps): React.JSX.Element {
     return (
         <div>
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold tracking-tight">Tracking</h1>
-                <p className="text-muted-foreground mt-2">
-                    Monitor crypto signals, tokens, authors, and market
-                    narratives
-                </p>
-            </div>
-
-            <div className="mb-6 flex items-center gap-4">
-                <TrackingSearchBar onSearch={onSearch} isLoading={isLoading} />
-                <Badge variant="secondary" className="whitespace-nowrap">
-                    {totalCount} results
-                </Badge>
+            <div className="mb-8 border-b border-emerald-500/20 pb-4">
+                <div className="flex items-end justify-between gap-4 mb-2">
+                    <div>
+                        <h1 className="text-3xl font-mono font-bold text-emerald-400">
+                            TRACKING ({totalCount})
+                        </h1>
+                        <p className="text-gray-400 font-mono text-sm mt-2">
+                            &gt; Monitor crypto signals, tokens, authors, and
+                            market narratives
+                        </p>
+                    </div>
+                    <TrackingSearchBar
+                        onSearch={onSearch}
+                        isLoading={isLoading}
+                    />
+                </div>
             </div>
         </div>
     );

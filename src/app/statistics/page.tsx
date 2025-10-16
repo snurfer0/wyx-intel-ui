@@ -16,12 +16,15 @@ export default function StatisticsPage(): React.JSX.Element {
     if (isLoading) {
         return (
             <div className="container mx-auto p-6 max-w-7xl">
-                <h1 className="text-3xl font-bold tracking-tight mb-8">
-                    Statistics
+                <h1 className="text-3xl font-mono font-bold text-emerald-400 mb-8">
+                    STATISTICS
                 </h1>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                     {Array.from({ length: 6 }).map((_, i) => (
-                        <Skeleton key={i} className="h-32" />
+                        <Skeleton
+                            key={i}
+                            className="h-32 bg-emerald-500/5 border border-emerald-500/20"
+                        />
                     ))}
                 </div>
             </div>
@@ -31,12 +34,12 @@ export default function StatisticsPage(): React.JSX.Element {
     if (error || !stats) {
         return (
             <div className="container mx-auto p-6 max-w-7xl">
-                <h1 className="text-3xl font-bold tracking-tight mb-8">
-                    Statistics
+                <h1 className="text-3xl font-mono font-bold text-emerald-400 mb-8">
+                    STATISTICS
                 </h1>
-                <Card>
+                <Card className="border-emerald-500/20 bg-black">
                     <CardContent className="pt-6">
-                        <p className="text-center text-muted-foreground">
+                        <p className="text-center font-mono text-gray-400">
                             {error || 'No statistics available'}
                         </p>
                     </CardContent>
@@ -51,12 +54,12 @@ export default function StatisticsPage(): React.JSX.Element {
 
     return (
         <div className="container mx-auto p-6 max-w-7xl space-y-6">
-            <div>
-                <h1 className="text-3xl font-bold tracking-tight">
-                    Statistics Dashboard
+            <div className="border-b border-emerald-500/20 pb-4">
+                <h1 className="text-3xl font-mono font-bold text-emerald-400">
+                    STATISTICS_DASHBOARD
                 </h1>
-                <p className="text-muted-foreground mt-2">
-                    Real-time analytics and metrics (updates every second)
+                <p className="text-gray-400 font-mono text-sm mt-2">
+                    &gt; Real-time analytics and metrics (updates every second)
                 </p>
             </div>
 
@@ -161,40 +164,40 @@ export default function StatisticsPage(): React.JSX.Element {
             </div>
 
             {/* System Info */}
-            <Card>
+            <Card className="border-emerald-500/20 bg-black">
                 <CardContent className="pt-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs font-mono text-gray-500 uppercase">
                                 Database Size
                             </p>
-                            <p className="text-lg font-semibold">
+                            <p className="text-lg font-mono font-semibold text-emerald-400">
                                 {stats.system.databaseSize}
                             </p>
                         </div>
                         <div>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs font-mono text-gray-500 uppercase">
                                 Total Embeddings
                             </p>
-                            <p className="text-lg font-semibold">
+                            <p className="text-lg font-mono font-semibold text-emerald-400">
                                 {formatLargeNumber(
                                     stats.system.totalEmbeddings,
                                 )}
                             </p>
                         </div>
                         <div>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs font-mono text-gray-500 uppercase">
                                 Token Profile Completion
                             </p>
-                            <p className="text-lg font-semibold">
+                            <p className="text-lg font-mono font-semibold text-emerald-400">
                                 {stats.tokenProfiles.completionRate}%
                             </p>
                         </div>
                         <div>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs font-mono text-gray-500 uppercase">
                                 Tokens with Scraped Data
                             </p>
-                            <p className="text-lg font-semibold">
+                            <p className="text-lg font-mono font-semibold text-emerald-400">
                                 {formatLargeNumber(
                                     stats.tokens.withScrapedData,
                                 )}

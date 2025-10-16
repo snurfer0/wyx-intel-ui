@@ -1,5 +1,6 @@
 'use client';
 
+import { BarChart3, Activity, LogOut, X, Terminal } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
@@ -28,46 +29,12 @@ export function Sidebar({
         {
             href: '/tracking',
             label: 'Tracking',
-            icon: (
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <path d="M3 3v18h18" />
-                    <path d="m19 9-5 5-4-4-3 3" />
-                </svg>
-            ),
+            icon: Activity,
         },
         {
             href: '/statistics',
             label: 'Statistics',
-            icon: (
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
-                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
-                    <path d="M12 11h4" />
-                    <path d="M12 16h4" />
-                    <path d="M8 11h.01" />
-                    <path d="M8 16h.01" />
-                </svg>
-            ),
+            icon: BarChart3,
         },
     ];
 
@@ -80,7 +47,7 @@ export function Sidebar({
             {/* Mobile backdrop */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                    className="fixed inset-0 bg-black/80 z-40 lg:hidden"
                     onClick={onClose}
                 />
             )}
@@ -89,36 +56,33 @@ export function Sidebar({
             <aside
                 className={`
                     fixed lg:sticky top-0 left-0 z-50 h-screen
-                    w-64 bg-background border-r
+                    w-64 bg-black border-r border-emerald-500/20
                     transition-transform duration-300 ease-in-out
                     ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
                 `}
             >
                 <div className="flex flex-col h-full">
                     {/* Header */}
-                    <div className="flex items-center justify-between p-6 border-b">
-                        <h1 className="text-xl font-bold">WYX Intel</h1>
+                    <div className="flex items-center justify-between p-6 border-b border-emerald-500/20">
+                        <div className="flex items-center gap-3">
+                            <Terminal className="w-6 h-6 text-emerald-400" />
+                            <div>
+                                <h1 className="text-lg font-mono font-bold text-emerald-400">
+                                    WYX_INTEL
+                                </h1>
+                                <p className="text-xs font-mono text-emerald-600">
+                                    v1.0.0
+                                </p>
+                            </div>
+                        </div>
                         {onClose && (
                             <Button
                                 variant="ghost"
                                 size="sm"
                                 onClick={onClose}
-                                className="lg:hidden"
+                                className="lg:hidden hover:bg-emerald-500/10 text-emerald-500"
                             >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="20"
-                                    height="20"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    strokeWidth="2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                >
-                                    <line x1="18" y1="6" x2="6" y2="18" />
-                                    <line x1="6" y1="6" x2="18" y2="18" />
-                                </svg>
+                                <X className="w-5 h-5" />
                             </Button>
                         )}
                     </div>
@@ -126,54 +90,47 @@ export function Sidebar({
                     {/* Navigation */}
                     <nav className="flex-1 p-4">
                         <ul className="space-y-2">
-                            {navItems.map(item => (
-                                <li key={item.href}>
-                                    <Link
-                                        href={item.href}
-                                        onClick={onClose}
-                                        className={`
-                                            flex items-center gap-3 px-4 py-3 rounded-lg
-                                            transition-colors duration-200
-                                            ${
-                                                isActive(item.href)
-                                                    ? 'bg-primary text-primary-foreground'
-                                                    : 'hover:bg-muted'
-                                            }
-                                        `}
-                                    >
-                                        {item.icon}
-                                        <span className="font-medium">
-                                            {item.label}
-                                        </span>
-                                    </Link>
-                                </li>
-                            ))}
+                            {navItems.map(item => {
+                                const Icon = item.icon;
+                                const active = isActive(item.href);
+                                return (
+                                    <li key={item.href}>
+                                        <Link
+                                            href={item.href}
+                                            onClick={onClose}
+                                            className={`
+                                                group relative flex items-center gap-3 px-4 py-3 rounded
+                                                transition-all duration-200 font-mono
+                                                ${
+                                                    active
+                                                        ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
+                                                        : 'text-gray-400 hover:text-emerald-400 hover:bg-emerald-500/5'
+                                                }
+                                            `}
+                                        >
+                                            <Icon className="w-5 h-5" />
+                                            <span className="text-sm">
+                                                {item.label}
+                                            </span>
+                                            {active && (
+                                                <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-emerald-400" />
+                                            )}
+                                        </Link>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </nav>
 
                     {/* Logout Button */}
-                    <div className="p-4 border-t">
+                    <div className="p-4 border-t border-emerald-500/20">
                         <Button
-                            variant="outline"
+                            variant="ghost"
                             onClick={handleLogout}
-                            className="w-full justify-start gap-3"
+                            className="w-full justify-start gap-3 font-mono text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200"
                         >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="20"
-                                height="20"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                                <polyline points="16 17 21 12 16 7" />
-                                <line x1="21" y1="12" x2="9" y2="12" />
-                            </svg>
-                            Logout
+                            <LogOut className="w-5 h-5" />
+                            <span className="text-sm">logout</span>
                         </Button>
                     </div>
                 </div>

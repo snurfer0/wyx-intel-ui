@@ -40,8 +40,8 @@ export function TrackingGrid({
 
             {!hasMore && items.length > 0 && (
                 <div className="text-center py-8">
-                    <p className="text-sm text-muted-foreground">
-                        End of results
+                    <p className="text-sm font-mono text-gray-500">
+                        &gt; End of results
                     </p>
                 </div>
             )}

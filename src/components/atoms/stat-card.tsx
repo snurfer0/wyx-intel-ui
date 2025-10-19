@@ -16,19 +16,19 @@ export function StatCard({
 }: StatCardProps): React.JSX.Element {
     return (
         <Card
-            className={`border-emerald-500/20 bg-black hover:border-emerald-500/40 transition-colors ${className || ''}`}
+            className={`border-emerald-500/20 bg-zinc-950 hover:bg-zinc-900/50 hover:border-emerald-500/40 transition-all ${className || ''}`}
         >
             <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-mono font-medium text-gray-400 uppercase">
+                <CardTitle className="text-sm font-mono font-medium text-gray-500 uppercase tracking-wider">
                     {title}
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="text-3xl font-mono font-bold text-emerald-400">
+                <div className="text-3xl font-mono font-bold text-white">
                     {value}
                 </div>
                 {subtitle && (
-                    <p className="text-xs font-mono text-gray-500 mt-1">
+                    <p className="text-xs font-mono text-emerald-400/80 mt-2">
                         {subtitle}
                     </p>
                 )}

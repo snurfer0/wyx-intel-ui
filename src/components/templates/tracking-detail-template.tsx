@@ -33,11 +33,11 @@ export function TrackingDetailTemplate({
     if (isLoading) {
         return (
             <div className="container mx-auto p-6 max-w-7xl">
-                <Skeleton className="h-10 w-32 mb-6 bg-emerald-500/10" />
+                <Skeleton className="h-10 w-32 mb-6 bg-zinc-950 border border-emerald-500/20" />
                 <div className="space-y-6">
-                    <Skeleton className="h-64 w-full bg-emerald-500/10" />
-                    <Skeleton className="h-96 w-full bg-emerald-500/10" />
-                    <Skeleton className="h-64 w-full bg-emerald-500/10" />
+                    <Skeleton className="h-64 w-full bg-zinc-950 border border-emerald-500/20" />
+                    <Skeleton className="h-96 w-full bg-zinc-950 border border-emerald-500/20" />
+                    <Skeleton className="h-64 w-full bg-zinc-950 border border-emerald-500/20" />
                 </div>
             </div>
         );
@@ -109,7 +109,7 @@ export function TrackingDetailTemplate({
             <div className="space-y-6">
                 {/* Header Section */}
                 <div className="border-l-2 border-emerald-500 pl-4">
-                    <h1 className="text-2xl font-mono font-semibold text-emerald-400 mb-1">
+                    <h1 className="text-2xl font-mono font-semibold text-white mb-1">
                         {trackingResponse.tracking.title}
                     </h1>
                     <div className="flex flex-wrap items-center gap-x-2 text-xs font-mono text-gray-500">
@@ -142,14 +142,14 @@ export function TrackingDetailTemplate({
                     </div>
                 </div>
 
-                <Card className="border-emerald-500/20 bg-black">
-                    <CardHeader>
-                        <CardTitle className="text-lg font-mono text-emerald-400 flex items-center gap-2">
+                <Card className="border-emerald-500/20 bg-zinc-950">
+                    <CardHeader className="border-b border-emerald-500/10">
+                        <CardTitle className="text-lg font-mono text-emerald-400 flex items-center gap-2 tracking-wide">
                             <Brain className="w-4 h-4" />
                             Reasoning Chain
                         </CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="pt-6">
                         <ReasoningChain
                             reasons={trackingResponse.tracking.reasoning}
                         />
@@ -158,7 +158,7 @@ export function TrackingDetailTemplate({
 
                 {trackingResponse.tokens.length > 0 && (
                     <div>
-                        <h2 className="text-xl font-mono font-semibold text-emerald-400 mb-4">
+                        <h2 className="text-xl font-mono font-semibold text-white mb-4">
                             Tokens ({trackingResponse.tokens.length})
                         </h2>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
@@ -171,7 +171,7 @@ export function TrackingDetailTemplate({
 
                 {trackingResponse.posts.length > 0 && (
                     <div>
-                        <h2 className="text-xl font-mono font-semibold text-emerald-400 mb-4">
+                        <h2 className="text-xl font-mono font-semibold text-white mb-4">
                             Posts ({trackingResponse.posts.length})
                         </h2>
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -187,7 +187,7 @@ export function TrackingDetailTemplate({
 
                 {trackingResponse.posts.length === 0 &&
                     trackingResponse.tokens.length === 0 && (
-                        <Card className="border-emerald-500/20 bg-black">
+                        <Card className="border-emerald-500/20 bg-zinc-950">
                             <CardContent className="py-12">
                                 <p className="text-center font-mono text-gray-500">
                                     No posts or tokens associated with this

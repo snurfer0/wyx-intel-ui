@@ -15,7 +15,7 @@ export function LoadingGrid({
             {Array.from({ length: count }).map((_, i) => (
                 <Skeleton
                     key={i}
-                    className="h-80 bg-emerald-500/5 border border-emerald-500/20"
+                    className="h-80 bg-zinc-950 border border-emerald-500/20"
                 />
             ))}
         </div>

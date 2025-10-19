@@ -19,23 +19,23 @@ export function ActivityCard({
 }: ActivityCardProps): React.JSX.Element {
     return (
         <Card
-            className={`border-emerald-500/20 bg-black hover:border-emerald-500/40 transition-colors ${className || ''}`}
+            className={`border-emerald-500/20 bg-zinc-950 hover:bg-zinc-900/50 hover:border-emerald-500/40 transition-all ${className || ''}`}
         >
-            <CardHeader>
-                <CardTitle className="text-base font-mono text-emerald-400">
+            <CardHeader className="border-b border-emerald-500/10">
+                <CardTitle className="text-base font-mono text-emerald-400 tracking-wide">
                     {title}
                 </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="space-y-4 pt-6">
                 {items.map((item, idx) => (
                     <div
                         key={idx}
-                        className="flex justify-between items-center border-b border-emerald-500/10 pb-2 last:border-0"
+                        className="flex justify-between items-center"
                     >
-                        <span className="text-sm font-mono text-gray-400">
+                        <span className="text-sm font-mono text-gray-500 uppercase text-xs tracking-wider">
                             {item.label}
                         </span>
-                        <span className="font-mono font-semibold text-emerald-400">
+                        <span className="font-mono font-bold text-white text-lg">
                             {item.value}
                         </span>
                     </div>

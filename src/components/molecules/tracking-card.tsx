@@ -36,12 +36,12 @@ export function TrackingCard({
 
     return (
         <Card
-            className="h-full flex flex-col border-emerald-500/20 bg-black hover:border-emerald-500/40 transition-all duration-200 cursor-pointer relative"
+            className="h-full flex flex-col border-emerald-500/20 bg-zinc-950 hover:bg-zinc-900/50 hover:border-emerald-500/40 transition-all duration-200 cursor-pointer relative"
             onClick={handleCardClick}
         >
             <CardHeader className="space-y-3 pb-4 relative">
                 {/* Title */}
-                <CardTitle className="text-lg font-mono leading-snug line-clamp-2 text-emerald-400">
+                <CardTitle className="text-lg font-mono leading-snug line-clamp-2 text-white">
                     {item.title}
                 </CardTitle>
 
@@ -64,14 +64,14 @@ export function TrackingCard({
             <CardContent className="flex-1 flex flex-col space-y-4 pt-0 mt-4">
                 {item.entityId && (
                     <div>
-                        <h4 className="text-xs font-mono font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                        <h4 className="text-xs font-mono font-medium text-gray-500 uppercase tracking-wider mb-2">
                             {item.entityType}
                         </h4>
                         <code
                             onClick={(e): void => {
                                 void handleCopyEntityId(e);
                             }}
-                            className="text-xs bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 px-3 py-2 rounded break-all cursor-pointer hover:bg-emerald-500/10 transition-colors block font-mono"
+                            className="text-xs bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 px-3 py-2 break-all cursor-pointer hover:bg-emerald-500/10 transition-colors block font-mono"
                             title="Click to copy"
                         >
                             {item.entityId.length > 30
@@ -82,16 +82,16 @@ export function TrackingCard({
                 )}
 
                 <div className="flex-1">
-                    <h4 className="text-xs font-mono font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                    <h4 className="text-xs font-mono font-medium text-gray-500 uppercase tracking-wider mb-2">
                         Reasoning Chain
                     </h4>
                     <div className="space-y-2">
                         {item.reasoning.slice(0, 2).map((reason, idx) => (
                             <div key={idx} className="flex gap-2">
-                                <span className="text-xs font-mono font-medium text-emerald-500 mt-0.5">
+                                <span className="text-xs font-mono font-medium text-emerald-500/60 mt-0.5">
                                     {idx + 1}.
                                 </span>
-                                <p className="text-xs font-mono text-gray-400 line-clamp-2 leading-relaxed">
+                                <p className="text-xs font-mono text-gray-300 line-clamp-2 leading-relaxed">
                                     {reason.text}
                                 </p>
                             </div>

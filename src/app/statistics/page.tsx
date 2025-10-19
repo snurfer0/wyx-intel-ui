@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import { StatCard } from '@/components/atoms/stat-card';
-import { ActivityCard } from '@/components/molecules/activity-card';
+import { TimeseriesSection } from '@/components/organisms/timeseries-section';
 import { TopAuthorsList } from '@/components/organisms/top-authors-list';
 import { TopChainsList } from '@/components/organisms/top-chains-list';
-import { Card, CardContent } from '@/components/ui/card';
+import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAnalyticsStats } from '@/hooks/use-analytics-stats';
 import { formatLargeNumber } from '@/utils/number-formatting';
 
@@ -23,7 +23,7 @@ export default function StatisticsPage(): React.JSX.Element {
                     {Array.from({ length: 6 }).map((_, i) => (
                         <Skeleton
                             key={i}
-                            className="h-32 bg-emerald-500/5 border border-emerald-500/20"
+                            className="h-32 bg-zinc-950 border border-emerald-500/20"
                         />
                     ))}
                 </div>
@@ -37,13 +37,11 @@ export default function StatisticsPage(): React.JSX.Element {
                 <h1 className="text-3xl font-mono font-bold text-emerald-400 mb-8">
                     STATISTICS
                 </h1>
-                <Card className="border-emerald-500/20 bg-black">
-                    <CardContent className="pt-6">
-                        <p className="text-center font-mono text-gray-400">
-                            {error || 'No statistics available'}
-                        </p>
-                    </CardContent>
-                </Card>
+                <div className="border border-emerald-500/20 bg-zinc-950 p-6">
+                    <p className="text-center font-mono text-gray-400">
+                        {error || 'No statistics available'}
+                    </p>
+                </div>
             </div>
         );
     }
@@ -53,159 +51,227 @@ export default function StatisticsPage(): React.JSX.Element {
         .slice(0, 5);
 
     return (
-        <div className="container mx-auto p-6 max-w-7xl space-y-6">
-            <div className="border-b border-emerald-500/20 pb-4">
-                <h1 className="text-3xl font-mono font-bold text-emerald-400">
-                    STATISTICS_DASHBOARD
+        <div className="container mx-auto p-4 max-w-[1600px] space-y-4">
+            {/* Compact Header */}
+            <div className="flex items-center justify-between">
+                <h1 className="text-2xl font-mono font-bold text-emerald-400">
+                    STATISTICS
                 </h1>
-                <p className="text-gray-400 font-mono text-sm mt-2">
-                    &gt; Real-time analytics and metrics (updates every second)
-                </p>
+                <div className="flex items-center gap-3 text-xs font-mono text-gray-500">
+                    <span className="text-gray-600">
+                        DB: {stats.system.databaseSize}
+                    </span>
+                    <Separator orientation="vertical" className="h-4" />
+                    <span className="text-gray-600">
+                        Embeddings:{' '}
+                        {formatLargeNumber(stats.system.totalEmbeddings)}
+                    </span>
+                    <Separator orientation="vertical" className="h-4" />
+                    <span className="text-gray-600">
+                        Profile: {stats.tokenProfiles.completionRate}%
+                    </span>
+                </div>
             </div>
 
-            {/* Overview Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatCard
-                    title="Total Posts"
-                    value={formatLargeNumber(stats.overview.totalPosts)}
-                    subtitle={`+${formatLargeNumber(stats.overview.postsLast24h)} last 24h`}
-                />
-                <StatCard
-                    title="Total Tokens"
-                    value={formatLargeNumber(stats.overview.totalTokens)}
-                    subtitle={`${stats.tokens.withProfiles} with profiles`}
-                />
-                <StatCard
-                    title="Total Authors"
-                    value={formatLargeNumber(stats.overview.totalAuthors)}
-                    subtitle={`${formatLargeNumber(stats.authors.timeBasedStats.last24h)} last 24h`}
-                />
-                <StatCard
-                    title="Tracking Items"
-                    value={stats.overview.totalTracking}
-                    subtitle={`Avg priority: ${stats.tracking.avgPriority.toFixed(1)}`}
-                />
+            <Separator className="bg-emerald-500/20" />
+
+            {/* Compact Stats Grid */}
+            <div className="grid grid-cols-4 gap-6">
+                <div className="text-center">
+                    <p className="text-xs font-mono text-gray-500 uppercase tracking-wider mb-1">
+                        Posts
+                    </p>
+                    <p className="text-3xl font-mono font-bold text-emerald-400">
+                        {formatLargeNumber(stats.overview.totalPosts)}
+                    </p>
+                    <p className="text-xs font-mono text-gray-600 mt-1">
+                        +{formatLargeNumber(stats.overview.postsLast24h)} (24h)
+                    </p>
+                </div>
+                <div className="text-center">
+                    <p className="text-xs font-mono text-gray-500 uppercase tracking-wider mb-1">
+                        Tokens
+                    </p>
+                    <p className="text-3xl font-mono font-bold text-blue-400">
+                        {formatLargeNumber(stats.overview.totalTokens)}
+                    </p>
+                    <p className="text-xs font-mono text-gray-600 mt-1">
+                        {stats.tokens.withProfiles} profiles
+                    </p>
+                </div>
+                <div className="text-center">
+                    <p className="text-xs font-mono text-gray-500 uppercase tracking-wider mb-1">
+                        Authors
+                    </p>
+                    <p className="text-3xl font-mono font-bold text-purple-400">
+                        {formatLargeNumber(stats.overview.totalAuthors)}
+                    </p>
+                    <p className="text-xs font-mono text-gray-600 mt-1">
+                        {formatLargeNumber(
+                            stats.authors.timeBasedStats.last24h,
+                        )}{' '}
+                        (24h)
+                    </p>
+                </div>
+                <div className="text-center">
+                    <p className="text-xs font-mono text-gray-500 uppercase tracking-wider mb-1">
+                        Tracking
+                    </p>
+                    <p className="text-3xl font-mono font-bold text-orange-400">
+                        {stats.overview.totalTracking}
+                    </p>
+                    <p className="text-xs font-mono text-gray-600 mt-1">
+                        avg {stats.tracking.avgPriority.toFixed(1)} priority
+                    </p>
+                </div>
             </div>
 
-            {/* Activity Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <ActivityCard
-                    title="Recent Activity (1h)"
-                    items={[
-                        {
-                            label: 'Posts',
-                            value: stats.posts.timeBasedStats.last1h,
-                        },
-                        {
-                            label: 'Tokens',
-                            value: formatLargeNumber(
-                                stats.tokens.timeBasedStats.last1h,
-                            ),
-                        },
-                        {
-                            label: 'Authors',
-                            value: stats.authors.timeBasedStats.last1h,
-                        },
-                    ]}
-                />
-                <ActivityCard
-                    title="24 Hour Activity"
-                    items={[
-                        {
-                            label: 'Posts',
-                            value: formatLargeNumber(
-                                stats.posts.timeBasedStats.last24h,
-                            ),
-                        },
-                        {
-                            label: 'Tokens',
-                            value: formatLargeNumber(
-                                stats.tokens.timeBasedStats.last24h,
-                            ),
-                        },
-                        {
-                            label: 'Authors',
-                            value: formatLargeNumber(
-                                stats.authors.timeBasedStats.last24h,
-                            ),
-                        },
-                    ]}
-                />
-                <ActivityCard
-                    title="7 Day Activity"
-                    items={[
-                        {
-                            label: 'Posts',
-                            value: formatLargeNumber(
-                                stats.posts.timeBasedStats.last7d,
-                            ),
-                        },
-                        {
-                            label: 'Tokens',
-                            value: formatLargeNumber(
-                                stats.tokens.timeBasedStats.last7d,
-                            ),
-                        },
-                        {
-                            label: 'Avg/day',
-                            value: formatLargeNumber(stats.posts.avgPerDay),
-                        },
-                    ]}
-                />
-            </div>
+            {/* Compact Chart */}
+            <TimeseriesSection />
 
-            {/* Top Authors and Chains */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <TopAuthorsList authors={stats.authors.topByPosts} />
-                <TopChainsList
-                    chains={topChains}
-                    totalTokens={stats.tokens.total}
-                />
-            </div>
+            {/* Tabs for Activity/Authors/Chains */}
+            <Tabs defaultValue="activity" className="w-full">
+                <TabsList className="grid w-full grid-cols-3 bg-zinc-900">
+                    <TabsTrigger
+                        value="activity"
+                        className="font-mono text-xs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+                    >
+                        Activity
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="authors"
+                        className="font-mono text-xs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+                    >
+                        Top Authors
+                    </TabsTrigger>
+                    <TabsTrigger
+                        value="chains"
+                        className="font-mono text-xs data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-400"
+                    >
+                        Top Chains
+                    </TabsTrigger>
+                </TabsList>
 
-            {/* System Info */}
-            <Card className="border-emerald-500/20 bg-black">
-                <CardContent className="pt-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div>
-                            <p className="text-xs font-mono text-gray-500 uppercase">
-                                Database Size
+                <TabsContent value="activity" className="mt-4">
+                    <div className="grid grid-cols-3 gap-4 font-mono">
+                        <div className="border border-emerald-500/20 bg-zinc-950 p-4">
+                            <p className="text-xs text-gray-500 mb-3">
+                                Last 1 Hour
                             </p>
-                            <p className="text-lg font-mono font-semibold text-emerald-400">
-                                {stats.system.databaseSize}
-                            </p>
+                            <div className="space-y-2">
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-gray-400">Posts</span>
+                                    <span className="text-emerald-400">
+                                        {stats.posts.timeBasedStats.last1h}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-gray-400">
+                                        Tokens
+                                    </span>
+                                    <span className="text-blue-400">
+                                        {formatLargeNumber(
+                                            stats.tokens.timeBasedStats.last1h,
+                                        )}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-gray-400">
+                                        Authors
+                                    </span>
+                                    <span className="text-purple-400">
+                                        {stats.authors.timeBasedStats.last1h}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-xs font-mono text-gray-500 uppercase">
-                                Total Embeddings
+
+                        <div className="border border-emerald-500/20 bg-zinc-950 p-4">
+                            <p className="text-xs text-gray-500 mb-3">
+                                Last 24 Hours
                             </p>
-                            <p className="text-lg font-mono font-semibold text-emerald-400">
-                                {formatLargeNumber(
-                                    stats.system.totalEmbeddings,
-                                )}
-                            </p>
+                            <div className="space-y-2">
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-gray-400">Posts</span>
+                                    <span className="text-emerald-400">
+                                        {formatLargeNumber(
+                                            stats.posts.timeBasedStats.last24h,
+                                        )}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-gray-400">
+                                        Tokens
+                                    </span>
+                                    <span className="text-blue-400">
+                                        {formatLargeNumber(
+                                            stats.tokens.timeBasedStats.last24h,
+                                        )}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-gray-400">
+                                        Authors
+                                    </span>
+                                    <span className="text-purple-400">
+                                        {formatLargeNumber(
+                                            stats.authors.timeBasedStats
+                                                .last24h,
+                                        )}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            <p className="text-xs font-mono text-gray-500 uppercase">
-                                Token Profile Completion
+
+                        <div className="border border-emerald-500/20 bg-zinc-950 p-4">
+                            <p className="text-xs text-gray-500 mb-3">
+                                Last 7 Days
                             </p>
-                            <p className="text-lg font-mono font-semibold text-emerald-400">
-                                {stats.tokenProfiles.completionRate}%
-                            </p>
-                        </div>
-                        <div>
-                            <p className="text-xs font-mono text-gray-500 uppercase">
-                                Tokens with Scraped Data
-                            </p>
-                            <p className="text-lg font-mono font-semibold text-emerald-400">
-                                {formatLargeNumber(
-                                    stats.tokens.withScrapedData,
-                                )}
-                            </p>
+                            <div className="space-y-2">
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-gray-400">Posts</span>
+                                    <span className="text-emerald-400">
+                                        {formatLargeNumber(
+                                            stats.posts.timeBasedStats.last7d,
+                                        )}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-gray-400">
+                                        Tokens
+                                    </span>
+                                    <span className="text-blue-400">
+                                        {formatLargeNumber(
+                                            stats.tokens.timeBasedStats.last7d,
+                                        )}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between text-sm">
+                                    <span className="text-gray-400">
+                                        Avg/day
+                                    </span>
+                                    <span className="text-gray-300">
+                                        {formatLargeNumber(
+                                            stats.posts.avgPerDay,
+                                        )}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </CardContent>
-            </Card>
+                </TabsContent>
+
+                <TabsContent value="authors" className="mt-4">
+                    <TopAuthorsList authors={stats.authors.topByPosts} />
+                </TabsContent>
+
+                <TabsContent value="chains" className="mt-4">
+                    <TopChainsList
+                        chains={topChains}
+                        totalTokens={stats.tokens.total}
+                    />
+                </TabsContent>
+            </Tabs>
         </div>
     );
 }

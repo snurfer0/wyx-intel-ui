@@ -107,3 +107,29 @@ export const analyticsStatsSchema = z.object({
 });
 
 export type AnalyticsStats = z.infer<typeof analyticsStatsSchema>;
+
+const timeseriesDataPointSchema = z.object({
+    timestamp: z.string(),
+    count: z.number(),
+});
+
+export const timeseriesEntitySchema = z.enum(['authors', 'posts', 'tokens']);
+export const timeseriesGranularitySchema = z.enum([
+    'hourly',
+    'daily',
+    'monthly',
+]);
+
+export const timeseriesResponseSchema = z.object({
+    entityType: timeseriesEntitySchema,
+    granularity: timeseriesGranularitySchema,
+    data: z.array(timeseriesDataPointSchema),
+    total: z.number(),
+    startDate: z.string(),
+    endDate: z.string(),
+});
+
+export type TimeseriesEntity = z.infer<typeof timeseriesEntitySchema>;
+export type TimeseriesGranularity = z.infer<typeof timeseriesGranularitySchema>;
+export type TimeseriesDataPoint = z.infer<typeof timeseriesDataPointSchema>;
+export type TimeseriesResponse = z.infer<typeof timeseriesResponseSchema>;

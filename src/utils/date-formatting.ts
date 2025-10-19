@@ -26,3 +26,28 @@ export function formatTimestamp(timestamp: string): string {
         minute: '2-digit',
     });
 }
+
+export function formatTimeseriesDate(
+    timestamp: string,
+    granularity: 'hourly' | 'daily' | 'monthly',
+): string {
+    if (granularity === 'hourly') {
+        const [datePart, timePart] = timestamp.split(' ');
+        const date = new Date(datePart);
+        const day = date.getDate();
+        const month = date.toLocaleString('en-US', { month: 'short' });
+        return `${day} ${month} ${timePart}`;
+    }
+
+    if (granularity === 'monthly') {
+        const date = new Date(timestamp);
+        const month = date.toLocaleString('en-US', { month: 'short' });
+        const year = date.getFullYear();
+        return `${month} ${year}`;
+    }
+
+    const date = new Date(timestamp);
+    const day = date.getDate();
+    const month = date.toLocaleString('en-US', { month: 'short' });
+    return `${day} ${month}`;
+}

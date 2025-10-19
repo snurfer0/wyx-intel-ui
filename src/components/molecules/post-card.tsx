@@ -16,7 +16,7 @@ export function PostCard({ postWithAuthor }: PostCardProps): React.JSX.Element {
     const { post, author } = postWithAuthor;
 
     return (
-        <Card className="border-emerald-500/20 bg-black hover:border-emerald-500/40 transition-all duration-200">
+        <Card className="border-emerald-500/20 bg-zinc-950 hover:bg-zinc-900/50 hover:border-emerald-500/40 transition-all duration-200">
             <CardHeader className="pb-3">
                 <div className="flex items-start justify-between gap-3">
                     <PostAuthorInfo author={author} />
@@ -27,7 +27,7 @@ export function PostCard({ postWithAuthor }: PostCardProps): React.JSX.Element {
                 </div>
             </CardHeader>
             <CardContent className="space-y-3">
-                <p className="text-sm font-mono text-gray-400 whitespace-pre-wrap leading-relaxed">
+                <p className="text-sm font-mono text-gray-300 whitespace-pre-wrap leading-relaxed">
                     {post.text}
                 </p>
                 <Link

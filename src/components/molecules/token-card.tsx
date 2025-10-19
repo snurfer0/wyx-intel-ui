@@ -28,11 +28,11 @@ export function TokenCard({ token }: TokenCardProps): React.JSX.Element {
     };
 
     return (
-        <Card className="border-emerald-500/20 bg-black hover:border-emerald-500/40 transition-all duration-200">
+        <Card className="border-emerald-500/20 bg-zinc-950 hover:bg-zinc-900/50 hover:border-emerald-500/40 transition-all duration-200">
             <CardContent className="pt-4 space-y-2">
                 <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0 flex-1">
-                        <p className="font-mono font-medium text-sm text-emerald-400 truncate">
+                        <p className="font-mono font-medium text-sm text-white truncate">
                             {token.name}
                         </p>
                         <p className="text-xs font-mono text-gray-500">
@@ -41,7 +41,7 @@ export function TokenCard({ token }: TokenCardProps): React.JSX.Element {
                     </div>
                     <Badge
                         variant="outline"
-                        className="text-xs font-mono shrink-0 border-emerald-500/30 text-emerald-400"
+                        className="text-xs font-mono shrink-0 border-emerald-500/30 bg-emerald-500/5 text-emerald-400"
                     >
                         {token.chain.toUpperCase()}
                     </Badge>
@@ -51,7 +51,7 @@ export function TokenCard({ token }: TokenCardProps): React.JSX.Element {
                         onClick={(): void => {
                             void handleCopyTokenId();
                         }}
-                        className="text-xs font-mono bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 px-2 py-1 rounded block cursor-pointer hover:bg-emerald-500/10 transition-colors"
+                        className="text-xs font-mono bg-emerald-500/5 border border-emerald-500/20 text-emerald-400 px-2 py-1 block cursor-pointer hover:bg-emerald-500/10 transition-colors"
                         title="Click to copy full address"
                     >
                         {shortenAddress(token.id)}

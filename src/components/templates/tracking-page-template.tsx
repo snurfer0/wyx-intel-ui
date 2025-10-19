@@ -28,13 +28,13 @@ export function TrackingPageTemplate({
     loadMoreRef,
 }: TrackingPageTemplateProps): React.JSX.Element {
     return (
-        <div className="container mx-auto p-6">
+        <div className="container mx-auto p-4 max-w-[1600px] space-y-4">
             <TrackingHeader />
 
             {error && (
                 <Alert
                     variant="destructive"
-                    className="mb-6 border-red-500/20 bg-red-500/5"
+                    className="border-red-500/20 bg-red-500/5"
                 >
                     <AlertTitle className="font-mono text-red-400">
                         Error

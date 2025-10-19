@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
+import { EntitySelector } from '@/components/atoms/entity-selector';
+import { GranularitySelector } from '@/components/atoms/granularity-selector';
 import { TimeseriesChart } from '@/components/atoms/timeseries-chart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTimeseries } from '@/hooks/use-timeseries';
@@ -59,39 +61,17 @@ export function TimeseriesSection({
                         Activity Trends
                     </CardTitle>
                     <div className="flex gap-4">
-                        <div className="flex gap-2">
-                            {TABS.map(tab => (
-                                <button
-                                    key={tab.value}
-                                    onClick={(): void =>
-                                        setSelectedEntity(tab.value)
-                                    }
-                                    className={`px-3 py-1 text-xs font-mono font-medium transition-all cursor-pointer ${
-                                        selectedEntity === tab.value
-                                            ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                                            : 'bg-zinc-900 text-gray-500 border border-zinc-800 hover:border-zinc-700 hover:text-gray-400'
-                                    }`}
-                                >
-                                    {tab.label}
-                                </button>
-                            ))}
-                        </div>
-                        <div className="flex gap-1 border-l border-emerald-500/20 pl-4">
-                            {GRANULARITIES.map(gran => (
-                                <button
-                                    key={gran.value}
-                                    onClick={(): void =>
-                                        setSelectedGranularity(gran.value)
-                                    }
-                                    className={`px-2 py-1 text-xs font-mono font-medium transition-all cursor-pointer ${
-                                        selectedGranularity === gran.value
-                                            ? 'text-emerald-400'
-                                            : 'text-gray-600 hover:text-gray-400'
-                                    }`}
-                                >
-                                    {gran.label}
-                                </button>
-                            ))}
+                        <EntitySelector
+                            options={TABS}
+                            selected={selectedEntity}
+                            onSelect={setSelectedEntity}
+                        />
+                        <div className="border-l border-emerald-500/20 pl-4">
+                            <GranularitySelector
+                                options={GRANULARITIES}
+                                selected={selectedGranularity}
+                                onSelect={setSelectedGranularity}
+                            />
                         </div>
                     </div>
                 </div>

@@ -47,7 +47,7 @@ export function Sidebar({
             {/* Mobile backdrop */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black/80 z-40 lg:hidden"
+                    className="fixed inset-0 bg-black/80 z-40 lg:hidden cursor-pointer"
                     onClick={onClose}
                 />
             )}
@@ -100,7 +100,7 @@ export function Sidebar({
                                             onClick={onClose}
                                             className={`
                                                 group relative flex items-center gap-3 px-4 py-3 rounded
-                                                transition-all duration-200 font-mono
+                                                transition-all duration-200 font-mono cursor-pointer
                                                 ${
                                                     active
                                                         ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'

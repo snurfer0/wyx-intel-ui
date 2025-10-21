@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { API_URL } from '@/config/constants';
 import {
     PaginatedResponse,
     TrackingSearchItem,
@@ -8,26 +7,8 @@ import {
 } from '@/types';
 
 class TrackingService {
-    private getHeaders(apiKey?: string): Record<string, string> {
-        // Try to get API key from auth store if not provided
-        if (!apiKey && typeof window !== 'undefined') {
-            const stored = localStorage.getItem('wyx-auth-storage');
-            if (stored) {
-                const parsed = JSON.parse(stored) as {
-                    state?: { apiKey?: string };
-                };
-                apiKey = parsed.state?.apiKey;
-            }
-        }
-
-        return {
-            'x-api-secret': apiKey || '',
-        };
-    }
-
     async searchTrackingItems(
         params: TrackingSearchParams,
-        apiKey?: string,
     ): Promise<PaginatedResponse<TrackingSearchItem>> {
         try {
             const queryParams = new URLSearchParams();
@@ -43,10 +24,13 @@ class TrackingService {
                 queryParams.append('threshold', params.threshold.toString());
             }
 
+            // Use our API proxy route instead of calling backend directly
             const response = await axios.get<
                 PaginatedResponse<TrackingSearchItem>
-            >(`${API_URL}/ui/tracking/search?${queryParams.toString()}`, {
-                headers: this.getHeaders(apiKey),
+            >(`/api/tracking/search?${queryParams.toString()}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
             });
 
             return response.data;
@@ -56,15 +40,15 @@ class TrackingService {
         }
     }
 
-    async getTrackingById(
-        id: string,
-        apiKey?: string,
-    ): Promise<TrackingDetailed> {
+    async getTrackingById(id: string): Promise<TrackingDetailed> {
         try {
+            // Use our API proxy route instead of calling backend directly
             const response = await axios.get<TrackingDetailed>(
-                `${API_URL}/ui/tracking/${id}`,
+                `/api/tracking/${id}`,
                 {
-                    headers: this.getHeaders(apiKey),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                 },
             );
 

@@ -2,42 +2,54 @@
 
 import { useRouter, usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
-import { useAuthStore } from '@/stores/auth.store';
 
 interface AuthGuardProps {
     children: React.ReactNode;
 }
 
 export function AuthGuard({ children }: AuthGuardProps): React.JSX.Element {
-    const { isAuthenticated, apiKey } = useAuthStore();
     const router = useRouter();
     const pathname = usePathname();
-    const [isHydrated, setIsHydrated] = useState(false);
+    const [isChecking, setIsChecking] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-    // Wait for zustand to hydrate from localStorage
+    // Check auth status on mount and pathname changes
     useEffect(() => {
-        setIsHydrated(true);
-    }, []);
+        const checkAuth = async (): Promise<void> => {
+            // Skip auth check for public pages
+            if (pathname === '/' || pathname === '/login') {
+                setIsChecking(false);
+                setIsAuthenticated(false);
+                return;
+            }
 
-    useEffect(() => {
-        // Skip auth check until hydrated
-        if (!isHydrated) {
-            return;
-        }
+            // For protected routes, check auth status via API
+            if (pathname.startsWith('/admin')) {
+                try {
+                    const response = await fetch('/api/auth/status');
+                    const data = (await response.json()) as {
+                        authenticated: boolean;
+                    };
 
-        // Skip auth check for auth page
-        if (pathname === '/auth') {
-            return;
-        }
+                    if (data.authenticated) {
+                        setIsAuthenticated(true);
+                    } else {
+                        router.push('/login');
+                    }
+                } catch (error) {
+                    console.error('Auth check failed:', error);
+                    router.push('/login');
+                }
+            }
 
-        // Redirect to auth if not authenticated
-        if (!isAuthenticated || !apiKey) {
-            router.push('/auth');
-        }
-    }, [isHydrated, isAuthenticated, apiKey, pathname, router]);
+            setIsChecking(false);
+        };
 
-    // Show loading until hydrated
-    if (!isHydrated) {
+        void checkAuth();
+    }, [pathname, router]);
+
+    // Show loading while checking auth
+    if (isChecking) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="animate-pulse text-muted-foreground">
@@ -47,17 +59,17 @@ export function AuthGuard({ children }: AuthGuardProps): React.JSX.Element {
         );
     }
 
-    // If on auth page, always show it
-    if (pathname === '/auth') {
+    // If on public pages, always show them
+    if (pathname === '/' || pathname === '/login') {
         return <>{children}</>;
     }
 
-    // Only render children if authenticated
-    if (!isAuthenticated || !apiKey) {
+    // For /admin routes, only render if authenticated
+    if (pathname.startsWith('/admin') && !isAuthenticated) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="animate-pulse text-muted-foreground">
-                    Loading...
+                    Redirecting...
                 </div>
             </div>
         );

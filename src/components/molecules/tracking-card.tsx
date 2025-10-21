@@ -31,7 +31,7 @@ export function TrackingCard({
     };
 
     const handleCardClick = (): void => {
-        router.push(`/tracking/${item.id}`);
+        router.push(`/admin/tracking/${item.id}`);
     };
 
     return (

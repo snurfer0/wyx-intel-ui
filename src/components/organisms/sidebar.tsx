@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { useAuthStore } from '@/stores/auth.store';
 
 interface SidebarProps {
     isOpen?: boolean;
@@ -18,21 +17,30 @@ export function Sidebar({
 }: SidebarProps): React.JSX.Element {
     const pathname = usePathname();
     const router = useRouter();
-    const { clearAuth } = useAuthStore();
 
-    const handleLogout = (): void => {
-        clearAuth();
-        router.push('/auth');
+    const handleLogout = async (): Promise<void> => {
+        try {
+            // Call logout API to clear httpOnly cookie
+            await fetch('/api/auth/logout', {
+                method: 'POST',
+            });
+
+            router.push('/login');
+        } catch (error) {
+            console.error('Logout error:', error);
+            // Still redirect to login even if API call fails
+            router.push('/login');
+        }
     };
 
     const navItems = [
         {
-            href: '/tracking',
+            href: '/admin/tracking',
             label: 'Tracking',
             icon: Activity,
         },
         {
-            href: '/statistics',
+            href: '/admin/statistics',
             label: 'Statistics',
             icon: BarChart3,
         },
@@ -126,7 +134,9 @@ export function Sidebar({
                     <div className="p-4 border-t border-emerald-500/20">
                         <Button
                             variant="ghost"
-                            onClick={handleLogout}
+                            onClick={(): void => {
+                                void handleLogout();
+                            }}
                             className="w-full justify-start gap-3 font-mono text-gray-400 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200"
                         >
                             <LogOut className="w-5 h-5" />

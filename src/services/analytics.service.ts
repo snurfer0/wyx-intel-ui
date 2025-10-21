@@ -1,4 +1,3 @@
-import { API_URL } from '@/config/constants';
 import {
     analyticsStatsSchema,
     type AnalyticsStats,
@@ -9,25 +8,12 @@ import {
 } from '@/types/analytics.types';
 
 class AnalyticsService {
-    private getApiKey(): string {
-        if (typeof window === 'undefined') return '';
-
-        const stored = localStorage.getItem('wyx-auth-storage');
-        if (stored) {
-            const parsed = JSON.parse(stored) as {
-                state?: { apiKey?: string };
-            };
-            return parsed.state?.apiKey || '';
-        }
-        return '';
-    }
-
     async getStats(): Promise<AnalyticsStats> {
-        const response = await fetch(`${API_URL}/analytics/stats`, {
+        // Use our API proxy route instead of calling backend directly
+        const response = await fetch('/api/analytics/stats', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'x-api-secret': this.getApiKey(),
             },
             cache: 'no-store',
         });
@@ -60,13 +46,13 @@ class AnalyticsService {
             params.append('endDate', endDate);
         }
 
+        // Use our API proxy route instead of calling backend directly
         const response = await fetch(
-            `${API_URL}/analytics/timeseries?${params.toString()}`,
+            `/api/analytics/timeseries?${params.toString()}`,
             {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'x-api-secret': this.getApiKey(),
                 },
                 cache: 'no-store',
             },

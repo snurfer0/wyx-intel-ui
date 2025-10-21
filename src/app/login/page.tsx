@@ -1,18 +1,36 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
-import { API_URL } from '@/config/constants';
-import { useAuthStore } from '@/stores/auth.store';
 
 export default function AuthPage(): React.JSX.Element {
     const [apiKey, setApiKey] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const { setApiKey: saveApiKey } = useAuthStore();
     const router = useRouter();
+
+    // Check if already authenticated and redirect
+    useEffect(() => {
+        const checkAuth = async (): Promise<void> => {
+            try {
+                const response = await fetch('/api/auth/status');
+                const data = (await response.json()) as {
+                    authenticated: boolean;
+                };
+
+                if (data.authenticated) {
+                    router.push('/admin/statistics');
+                }
+            } catch (error) {
+                console.error('Auth check failed:', error);
+            }
+        };
+
+        void checkAuth();
+    }, [router]);
 
     const handleSubmit = async (e: React.FormEvent): Promise<void> => {
         e.preventDefault();
@@ -26,30 +44,33 @@ export default function AuthPage(): React.JSX.Element {
         setError(null);
 
         try {
-            // Verify the API key using the dedicated auth endpoint
-            const response = await fetch(`${API_URL}/auth`, {
-                method: 'GET',
+            // Use our API route to verify and set httpOnly cookie
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
                 headers: {
-                    'x-api-secret': apiKey,
+                    'Content-Type': 'application/json',
                 },
+                body: JSON.stringify({ apiKey }),
             });
 
+            const data = (await response.json()) as {
+                error?: string;
+                success?: boolean;
+            };
+
             if (!response.ok) {
-                throw new Error('Invalid API key');
+                throw new Error(data.error || 'Invalid API key');
             }
 
-            const data = (await response.json()) as { status: string };
-
-            if (data.status === 'ok') {
-                // If successful, save the key and redirect
-                saveApiKey(apiKey);
-                router.push('/tracking');
-            } else {
-                throw new Error('Invalid API key');
-            }
+            // Success - cookie is set by the server
+            router.push('/admin/statistics');
         } catch (err) {
             console.error('Authentication failed:', err);
-            setError('Invalid API key. Please check and try again.');
+            setError(
+                err instanceof Error
+                    ? err.message
+                    : 'Invalid API key. Please check and try again.',
+            );
         } finally {
             setIsLoading(false);
         }
@@ -61,6 +82,15 @@ export default function AuthPage(): React.JSX.Element {
             <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 via-transparent to-emerald-500/5 pointer-events-none" />
 
             <div className="w-full max-w-sm relative">
+                {/* Back button */}
+                <button
+                    onClick={(): void => router.push('/')}
+                    className="absolute -top-16 left-0 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back to home
+                </button>
+
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-semibold tracking-tight mb-3">
@@ -114,7 +144,7 @@ export default function AuthPage(): React.JSX.Element {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full h-14 bg-foreground text-background font-medium rounded-md hover:bg-foreground/90 active:bg-foreground/80 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm hover:shadow-md relative overflow-hidden group"
+                        className="w-full h-14 bg-foreground text-background font-medium rounded-md hover:bg-foreground/90 active:bg-foreground/80 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm hover:shadow-md relative overflow-hidden group"
                     >
                         <span className="relative z-10">
                             {isLoading ? 'Verifying...' : 'Continue'}

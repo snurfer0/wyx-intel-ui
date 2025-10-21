@@ -20,9 +20,19 @@ export function Sidebar({
 
     const handleLogout = async (): Promise<void> => {
         try {
+            // Get CSRF token
+            const csrfResponse = await fetch('/api/csrf');
+            const csrfData = (await csrfResponse.json()) as {
+                csrfToken: string;
+            };
+
             // Call logout API to clear httpOnly cookie
             await fetch('/api/auth/logout', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfData.csrfToken,
+                },
             });
 
             router.push('/login');

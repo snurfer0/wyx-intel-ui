@@ -6,6 +6,8 @@ export async function POST(): Promise<
         message: string;
     }>
 > {
+    // CSRF is already validated by middleware
+
     const res = NextResponse.json(
         { success: true, message: 'Logged out successfully' },
         { status: 200 },

@@ -43,8 +43,12 @@ export async function POST(request: NextRequest): Promise<
             );
         }
 
-        const body = (await request.json()) as { apiKey: string };
+        const body = (await request.json()) as {
+            apiKey: string;
+        };
         const { apiKey } = body;
+
+        // CSRF is already validated by middleware
 
         if (!apiKey || typeof apiKey !== 'string') {
             return NextResponse.json(

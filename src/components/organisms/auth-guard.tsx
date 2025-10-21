@@ -24,7 +24,8 @@ export function AuthGuard({ children }: AuthGuardProps): React.JSX.Element {
             }
 
             // For protected routes, check auth status via API
-            if (pathname.startsWith('/admin')) {
+            // Use exact matching: /admin or /admin/anything but not /administrator
+            if (pathname === '/admin' || pathname.startsWith('/admin/')) {
                 try {
                     const response = await fetch('/api/auth/status');
                     const data = (await response.json()) as {
@@ -65,7 +66,11 @@ export function AuthGuard({ children }: AuthGuardProps): React.JSX.Element {
     }
 
     // For /admin routes, only render if authenticated
-    if (pathname.startsWith('/admin') && !isAuthenticated) {
+    // Use exact matching: /admin or /admin/anything but not /administrator
+    if (
+        (pathname === '/admin' || pathname.startsWith('/admin/')) &&
+        !isAuthenticated
+    ) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <div className="animate-pulse text-muted-foreground">

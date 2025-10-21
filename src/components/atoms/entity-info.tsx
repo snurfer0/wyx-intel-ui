@@ -1,8 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { EntityTypeBadge } from '@/components/atoms/entity-type-badge';
-import { PriorityBadge } from '@/components/atoms/priority-badge';
 import type { EntityType, Priority } from '@/types';
 
 interface EntityInfoProps {
@@ -11,11 +9,7 @@ interface EntityInfoProps {
     entityId: string | null;
 }
 
-export function EntityInfo({
-    entityType,
-    priority,
-    entityId,
-}: EntityInfoProps): React.JSX.Element {
+export function EntityInfo({ entityId }: EntityInfoProps): React.JSX.Element {
     const [copied, setCopied] = useState(false);
 
     const handleCopyEntityId = async (): Promise<void> => {

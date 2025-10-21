@@ -1,8 +1,8 @@
 'use client';
 
+import { ArrowLeft } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Input } from '@/components/ui/input';
 
@@ -10,26 +10,35 @@ export default function AuthPage(): React.JSX.Element {
     const [apiKey, setApiKey] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [csrfToken, setCsrfToken] = useState<string>('');
     const router = useRouter();
 
-    // Check if already authenticated and redirect
+    // Fetch CSRF token and check auth on mount
     useEffect(() => {
-        const checkAuth = async (): Promise<void> => {
+        const init = async (): Promise<void> => {
             try {
-                const response = await fetch('/api/auth/status');
-                const data = (await response.json()) as {
+                // Get CSRF token
+                const csrfResponse = await fetch('/api/csrf');
+                const csrfData = (await csrfResponse.json()) as {
+                    csrfToken: string;
+                };
+                setCsrfToken(csrfData.csrfToken);
+
+                // Check if already authenticated
+                const authResponse = await fetch('/api/auth/status');
+                const authData = (await authResponse.json()) as {
                     authenticated: boolean;
                 };
 
-                if (data.authenticated) {
+                if (authData.authenticated) {
                     router.push('/admin/statistics');
                 }
             } catch (error) {
-                console.error('Auth check failed:', error);
+                console.error('Initialization failed:', error);
             }
         };
 
-        void checkAuth();
+        void init();
     }, [router]);
 
     const handleSubmit = async (e: React.FormEvent): Promise<void> => {
@@ -49,6 +58,7 @@ export default function AuthPage(): React.JSX.Element {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'X-CSRF-Token': csrfToken,
                 },
                 body: JSON.stringify({ apiKey }),
             });

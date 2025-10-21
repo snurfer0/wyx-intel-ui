@@ -2,14 +2,10 @@
 
 import { Brain } from 'lucide-react';
 import React from 'react';
-import { EntityInfo } from '@/components/atoms/entity-info';
-import { EntityTypeBadge } from '@/components/atoms/entity-type-badge';
-import { PriorityBadge } from '@/components/atoms/priority-badge';
 import { ReasoningChain } from '@/components/atoms/reasoning-chain';
 import { PostCard } from '@/components/molecules/post-card';
 import { TokenCard } from '@/components/molecules/token-card';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
